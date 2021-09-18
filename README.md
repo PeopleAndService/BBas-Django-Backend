@@ -8,4 +8,4 @@ git clone https://github.com/encode/django-rest-framework
 python manage.py runserver 아이피 : 포트 
 해서실행하면 됩니다.
 
-그리고 dataclassify.py 필요한데 그거 
+그리고 dbprofile.py 필요한데 그거 
