@@ -1,4 +1,4 @@
-# pnsAPI
+# BBas-Django-Backend
 
 Root 디렉토리에다가 
 
