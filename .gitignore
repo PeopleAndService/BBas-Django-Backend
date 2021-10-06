@@ -1,3 +1,4 @@
 pnsAPI/pnsAPI/dbprofile.py
-pnsAPI/pnsApp/__pycache__/
-pnsAPI/pnsApp/migrations/__pycache__/
+pnsAPI/pnsApp/__pycache__/*.pyc
+pnsAPI/pnsApp/migrations/__pycache__/*.pyc
+
