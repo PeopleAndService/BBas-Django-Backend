@@ -2,7 +2,7 @@ from django.db.models import fields
 from rest_framework import serializers
 from .models import QueueData, DriverAccount, PassengerAccount, RatingData
 
-class pnsAPIserializer(serializers.ModelSerializer):
+class QueueSerializer(serializers.ModelSerializer):
     class Meta:
         model = QueueData
         fields = ['id', 'uid', 'stbusStopId', 'edbusStopId', 'vehicleId', 'boardingCheck'] #JSON INPUT 목록
@@ -11,12 +11,12 @@ class pnsAPIserializer(serializers.ModelSerializer):
 class PassengerSerializer(serializers.ModelSerializer):
     class Meta:
         model = PassengerAccount
-        fields = ['uid', 'email', 'name', 'pushToken', 'pushSetting', 'emergencyPhone', 'verified', 'cityCode', 'lfBusOption']
+        fields = ['uid', 'name', 'pushToken', 'pushSetting', 'emergencyPhone', 'cityCode', 'lfBusOption']
 
 class DriverSerializer(serializers.ModelSerializer):
     class Meta:
         model = DriverAccount
-        fields = ['did', 'email', 'name', 'pushToken', 'pushSetting', 'verified', 'vehicleId', 'busRouteId']
+        fields = ['did', 'name', 'pushToken', 'pushSetting', 'verified', 'vehicleId', 'busRouteId']
 
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:

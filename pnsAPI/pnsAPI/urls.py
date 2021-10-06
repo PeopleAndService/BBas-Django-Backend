@@ -15,12 +15,8 @@ Including another URLconf
 """
 from django.urls import path, include
 from django.conf.urls import include 
-from pnsApp.views import ProjectCreate, ProjectList, SignUp
 
 urlpatterns = [
     path('v1/', include('pnsApp.urls')),
-    path('form/create/', ProjectCreate.as_view(), name='create-project'),
-    path('form/signUp/', SignUp.as_view(), name='create-project'),
-    path('form/list/', ProjectList.as_view()),
 
 ]

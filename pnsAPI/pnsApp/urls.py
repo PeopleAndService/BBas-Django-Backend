@@ -21,10 +21,15 @@ schema_view = get_schema_view(
         )
 #url(r'^pnsApp/(?P<slug>[-a-zA-Z0-9_]+)$', views.pns_detail),
 urlpatterns = [ #POST형식으로 바꿔야함
-    url(r'^pnsApp/(?P<pk>[0-9]+)$', views.pns_list, name="값 가져오기"),
+    url(r'^pnsApp/queuelist/(?P<pk>[0-9]+)$', views.queuelist),
+    url(r'^pnsApp/queue$', views.queue),
+    url(r'^pnsApp/passenger$', views.passengerByUid),
+    url(r'^pnsApp/driver$', views.driverByUid),
+    url(r'^pnsApp/ratinglist/(?P<pk>[0-9]+)$', views.ratinglist),
+    url(r'^pnsApp/rating$', views.rating),
+    url(r'^pnsApp/passengerSign$', views.passengerSign),
+    url(r'^pnsApp/driverSign$', views.driverSign),
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'), 
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'), 
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    url(r'^pnsApp/auth/signin', views.account_SignIn),
-    url(r'^pnsApp/auth/signup', views.account_SignUp),
 ]
