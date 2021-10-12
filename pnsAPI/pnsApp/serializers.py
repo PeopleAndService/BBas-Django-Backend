@@ -1,13 +1,11 @@
 from django.db.models import fields
 from rest_framework import serializers
-from .models import QueueData, DriverAccount, PassengerAccount, RatingData
-
+from .models import QueueData, DriverAccount, PassengerAccount, RatingData, routeData, busStationData, routePerBus
 class QueueSerializer(serializers.ModelSerializer):
     class Meta:
         model = QueueData
-        fields = ['id', 'uid', 'stbusStopId', 'edbusStopId', 'vehicleId', 'boardingCheck'] #JSON INPUT 목록
+        fields = ['uid', 'stbusStopId', 'edbusStopId', 'vehicleId', 'boardingCheck','busRouteId','stNodeOrder','edNodeOrder'] #JSON INPUT 목록
     
-
 class PassengerSerializer(serializers.ModelSerializer):
     class Meta:
         model = PassengerAccount
@@ -22,8 +20,25 @@ class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = RatingData
         fields = ['id', 'did', 'ratingData']
-        '''
-     
+
+class busSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = busStationData
+        fields =['nodeId', 'latitude', 'longitude', 'stationName', 'cityCode']
+
+class routeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = routeData
+        fields =['busRouteId','destination','routeNo']
+
+class routeBusStationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = routePerBus
+        fields =['nodeId','busRouteId','lfBus','nodeord']
+
+
+'''
+
 class QueueData(models.Model):  #신청 테이블
     id                      = models.BigAutoField(primary_key=True)
     uid                     = models.ForeignKey("PassengerAccount", related_name="user_data", on_delete=models.CASCADE, db_column="uid")
