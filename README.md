@@ -1,9 +1,11 @@
 # BBas-Django-Backend
 ### Structure
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/dffd9f91-7a7f-4c1e-93f6-8cd3d93c45b5/Untitled.png)
+
+![image](https://user-images.githubusercontent.com/71334624/136968579-424af594-42de-4442-8861-37403281aaa6.png)
 
 ### DB-Schema
-![Blank diagram (1).png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/eeb03c28-53af-4dd1-b878-a3e3b7bb38c8/Blank_diagram_(1).png)
+
+![Blank diagram (1)](https://user-images.githubusercontent.com/71334624/136968515-5aa4e63a-e487-4296-b2e0-43682b5ae99b.png)
 
 DB-Schema
 
