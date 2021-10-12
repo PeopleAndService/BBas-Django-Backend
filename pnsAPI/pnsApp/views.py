@@ -375,14 +375,82 @@ def StationRouteInfo(request):
                 for i in stationsRouteInfo:
                     temp = routeData.objects.filter(busRouteId=i.busRouteId)
                     routeInfo.append({
-                        'lfBus' : i.lfBus, #저상 버스
-                        'routeNo' : temp[0].routeNo, #노선 번호
-                        'destination' : temp[0].destination, #방면
+                        'description' : i.lfBus, #저상 버스
+                        'name' : temp[0].routeNo +"-"+temp[0].destination+"방면", #방면
+                        'id' : str(i.busRouteId),
+                        'type' : "expand"
                     }) 
-                tempList.append({'stationName':stationsList[0].stationName, 'distance':str(int(distance))+"m" ,'routeData':routeInfo})
+                tempList.append({'id': str(item.nodeId) ,'name':stationsList[0].stationName, 'description':str(int(distance))+"m",'type':"busStop" ,'routeData':routeInfo})
         print(len(tempList))
         return JsonResponse({'success' : True, 'result': tempList}, status=status.HTTP_200_OK)
-        
+
+
+
+
+@api_view(['POST'])
+def searchKey(request):
+    tempList = list()
+    if request.method == 'POST':
+        data = JSONParser().parse(request)
+        tempslug = str(data['keyword'].replace(" ", ""))
+        filterdItem = busStationData.objects.filter(stationName__icontains=tempslug)
+        print(len(filterdItem))
+        if len(filterdItem) == 0: #노선 정보일 때, 버스정류장이 아닐 때
+            print("asd")
+            filterdItem = routeData.objects.filter(routeNo__icontains=tempslug)
+            for i in filterdItem:
+                temps = routePerBus.objects.filter(busRouteId = i.busRouteId)
+                tempList.append({'description': temps[0].lfBus, 'name' : i.routeNo + "-"+i.destination+"방면", 'id' : str(i.busRouteId), 'type':"expand", 'routeData':None})
+            return JsonResponse({'success' : True, 'result': tempList}, status=status.HTTP_200_OK)
+        else: #버스정류장 일때,
+            routeFilter = routeData.objects.filter(routeNo=tempslug)
+            if len(routeFilter) == 0: #버스정류장 정보만 존재할 때
+                for i in filterdItem :
+                    routeList = list()
+                    tempGoe = (i.latitude, i.longitude)
+                    userlocation = (data['gpsLati'], data['gpsLong'])
+                    distance = haversine(tempGoe, userlocation) * 1000
+                    routeFilter = routePerBus.objects.filter(nodeId= i.nodeId)
+                    for item in routeFilter:
+                        temp = routeData.objects.filter(busRouteId=item.busRouteId)
+                        routeList.append({
+                            'description' : item.lfBus,
+                            'name': temp[0].routeNo + "-"+temp[0].destination+"방면",
+                            'id':str(item.busRouteId),
+                            'type':"expand"
+                        })
+                    
+                    tempList.append({'id':i.nodeId, 'name':i.stationName, 'description' : str(int(distance))+"m"  ,'type':"busStop", 'routeData':routeList})
+                return JsonResponse({'success':True, 'result':tempList}, status = status.HTTP_200_OK)
+            else:
+                filterdItem = busStationData.objects.filter(stationName__icontains=tempslug)
+                
+                for i in filterdItem :
+                    routeList = list()
+                    tempGoe = (i.latitude, i.longitude)
+                    userlocation = (data['gpsLati'], data['gpsLong'])
+                    distance = haversine(tempGoe, userlocation) * 1000
+                    routeFilter = routePerBus.objects.filter(nodeId= i.nodeId)
+                    for item in routeFilter:
+                        temp = routeData.objects.filter(busRouteId=item.busRouteId)
+                        routeList.append({
+                            'description' : item.lfBus,
+                            'name': temp[0].routeNo + "-"+temp[0].destination+"방면",
+                            'id':str(item.busRouteId),
+                            'type':"expand"
+                        })
+                    
+                    tempList.append({'id':i.nodeId, 'name':i.stationName, 'description' : str(int(distance))+"m"  ,'type':"busStop", 'routeData':routeList})
+
+                filterdItem = routeData.objects.filter(routeNo=tempslug)
+                for i in filterdItem:
+                    temps = routePerBus.objects.filter(busRouteId=i.busRouteId)
+                    tempList.append({'description': temps[0].lfBus, 'name' : i.routeNo + "-"+i.destination+"방면",  'id' : str(i.busRouteId), 'type':"expand", 'routeData':None})
+
+                return JsonResponse({'success':True, 'result':tempList}, status = status.HTTP_200_OK)
+
+#POST CHECKING
+
 def check_QueuePosting(nodeid, vehicleid, uid):
     global postFlag, recentNodeId, recentVehicleId, recentPostMan
     postFlag = True

@@ -1,6 +1,6 @@
 from django.urls import path, include
 from django.urls.resolvers import URLPattern
-from django.conf.urls import url 
+from django.conf.urls import url
 from pnsApp import views
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -28,6 +28,7 @@ urlpatterns = [ #POST형식으로 바꿔야함
     url(r'^pnsApp/passengerSign$', views.passengerSign),
     url(r'^pnsApp/driverSign$', views.driverSign),
     url(r'^pnsApp/getStationInfo$', views.StationRouteInfo),
+    url(r'^pnsApp/search$', views.searchKey),
     url(r'^pnsApp/queueInfo$', views.QueueInfo),
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'), 
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'), 
