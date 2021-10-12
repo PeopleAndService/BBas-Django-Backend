@@ -1,9 +1,9 @@
 # BBas-Django-Backend
 ### ServerClient - Info
--> OS : Windows 10 Education N x64
--> CPU : Intel(R) Core(TM) i7-9700F CPU @ 3.00GHz   3.00 GHz
--> RAM : 16.0GB
--> MEMORY : SSD 732GB, HDD 2TB
+- OS : Windows 10 Education N x64
+- CPU : Intel(R) Core(TM) i7-9700F CPU @ 3.00GHz   3.00 GHz
+- RAM : 16.0GB
+- MEMORY : SSD 732GB, HDD 2TB
 
 ### Structure
 
