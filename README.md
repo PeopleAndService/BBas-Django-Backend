@@ -11,7 +11,7 @@
 
 ### DB-Schema
 
-![Blank diagram (1)](https://user-images.githubusercontent.com/71334624/136968515-5aa4e63a-e487-4296-b2e0-43682b5ae99b.png)
+![Blank diagram (2)](https://user-images.githubusercontent.com/71334624/137425764-936b82a1-0146-4ae6-a65b-61947066ba74.png)
 
 
 DB-Schema
@@ -36,12 +36,10 @@ DB-Schema
     	"success": true, 
     	"result": {
     		"uid": "String",
-    		"name": "String",
-    		"pushToken": "String",
-    	  "pushSetting": Boolean,
-    	  "emergencyPhone": "String,
-    	  "cityCode": Integer,
-    	  "lfBusOption": Boolean
+    	    "name": "String",
+    	    "emergencyPhone": "String,
+    	    "cityCode": Integer,
+    	    "lfBusOption": Boolean
     						}
     }
     ```
@@ -50,11 +48,9 @@ DB-Schema
     
     ```json
     {
-    	"uid":String(255), (need)
-    	"name": String(20), (option)
-    	"pushToken": String(255), (option)
-    	 "pushSetting": Boolean, default = False, (option)
-    	 "emergencyPhone": String(13), (option)
+    	 "uid":String(255), (need)
+         "name": String(20), (option)
+       	 "emergencyPhone": String(13), (option)
     	 "cityCode": Integer, (option)
     	 "lfBusOption": Boolean, default = False, (option)
     }
@@ -65,13 +61,11 @@ DB-Schema
     	"success": true, 
     	"result": {
     		"uid": "String",
-    		"name": "String",
-    		"pushToken": "String",
-    	  "pushSetting": Boolean,
-    	  "emergencyPhone": "String,
-    	  "cityCode": Integer,
-    	  "lfBusOption": Boolean
-    						}
+       		"name": "String",
+            "emergencyPhone": "String,
+    	    "cityCode": Integer,
+    	    "lfBusOption": Boolean
+    		}
     }
     ```
     
@@ -111,8 +105,6 @@ DB-Schema
         "result": {
             "uid": "String",
             "name": "String",
-            "pushToken": null,
-            "pushSetting": false,
             "emergencyPhone": null,
             "cityCode": null,
             "lfBusOption": false
@@ -139,12 +131,9 @@ DB-Schema
     	"success": true, 
     	"result": {
     		"did": "String",
-    		"name": "String",
-    		"pushToken": "String",
-    	  "pushSetting": Boolean,
-    	  "verified": Boolean,
-    	  "vehicleId": "String",
-    	  "busRouteId": "String"
+       		"name": "String",
+            "vehicleId": "String",
+    	    "busRouteId": "String"
     						}
     }
     ```
@@ -153,11 +142,8 @@ DB-Schema
     
     ```json
     {
-    	"did":String(255), (need)
-    	"name": String(20), (option)
-    	"pushToken": String(255), (option)
-    	 "pushSetting": Boolean, default = False, (option)
-    	 "verified": Boolean, default = False, (option)
+    	 "did":String(255), (need)
+         "name": String(20), (option)
     	 "vehicleId": String(50), (option)
     	 "busRouteId": String(20), (option)
     }
@@ -169,11 +155,8 @@ DB-Schema
     	"result": {
     		"did": "String",
     		"name": "String",
-    		"pushToken": "String",
-    	  "pushSetting": Boolean,
-    	  "verified": Boolean,
-    	  "vehicleId": "String",
-    	  "busRouteId": "String"
+    	    "vehicleId": "String",
+    	    "busRouteId": "String"
     						}
     }
     ```
@@ -214,9 +197,6 @@ DB-Schema
     	"result": {
     		 "did": "String", 
     		 "name": "String", 
-    		 "pushToken": null, 
-    		 "pushSetting": false, 
-    		 "verified": false, 
     		 "vehicleId": null, 
     		 "busRouteId": null
     						}
@@ -246,8 +226,9 @@ DB-Schema
         "edbusStopId":String(50),
         "vehicleId":String(50),
         "uid":String(255) / passengerAccount에 존재하는 값이여야 합니다.
-    		"stNodeOrder":Integer,
-    		"edNodeOrder":Integer
+    	"stNodeOrder":Integer,
+    	"edNodeOrder":Integer,
+        "busRouteId" : String(20)
     }
     ```
     
@@ -261,8 +242,9 @@ DB-Schema
             "edbusStopId": "String",
             "vehicleId": "String",
             "boardingCheck": Boolean,
-    				"stNodeOrder" : Integer,
-    				"edNodeOrder" : Integer
+    		"stNodeOrder" : Integer,
+    		"edNodeOrder" : Integer,
+            "busRouteId" : String
         }
     }
     ```
