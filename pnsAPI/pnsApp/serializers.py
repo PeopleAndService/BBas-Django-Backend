@@ -9,12 +9,12 @@ class QueueSerializer(serializers.ModelSerializer):
 class PassengerSerializer(serializers.ModelSerializer):
     class Meta:
         model = PassengerAccount
-        fields = ['uid', 'name', 'pushToken', 'pushSetting', 'emergencyPhone', 'cityCode', 'lfBusOption']
+        fields = ['uid', 'name','emergencyPhone', 'cityCode', 'lfBusOption']
 
 class DriverSerializer(serializers.ModelSerializer):
     class Meta:
         model = DriverAccount
-        fields = ['did', 'name', 'pushToken', 'pushSetting', 'verified', 'vehicleId', 'busRouteId']
+        fields = ['did', 'name', 'vehicleId', 'busRouteId']
 
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
