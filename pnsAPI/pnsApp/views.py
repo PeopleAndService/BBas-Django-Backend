@@ -22,13 +22,6 @@ import urllib.request
 import json
 import time
 
-postFlag = False # 메시지를 보냈는지 진리 값 변수
-recentNodeId = "" # 최근 queue에 올린 데이터의 nodeId 변수
-recentVehicleId = "" # 최근 queue에 올린 데이터의 vehicleID 변수
-recentPostMan = "" # queue에 데이터를 올린 사용자 uid 변수
-recentCheck = True #최근에 포스트를 했는지 진리 값 변수
-recentMessageMan = "" #최근에 기사에게 메시지를 보낸 사용자 uid 변수
-
 # Queue데이터 API
 
 @api_view(['GET','POST','PUT','DELETE'])
@@ -43,7 +36,6 @@ def queue(request,slug):       #Queue데이터 등록, 반환, 삭제, 업데이
         q_serializer = QueueSerializer(data = parsed_data)
         if q_serializer.is_valid():
             q_serializer.save()
-            check_QueuePosting(parsed_data['stbusStopId'], parsed_data['vehicleId'], parsed_data['uid'])
             return JsonResponse({'success':True, 'result': q_serializer.data}, status = status.HTTP_201_CREATED)
         else:
             print(q_serializer.errors)
@@ -302,14 +294,12 @@ def QueueInfo(request): # 기사에게 데이터를 주는 API
     if request.method == 'POST':
         global recentNodeId, recentVehicleId, recentPostMan, recentCheck, recentMessageMan
         data = JSONParser().parse(request)
-        print(data)
         ordered = 0
         tempIndex = {'recentResult':{'stationName':"", 'queueTime':""}}
-        url = "http://openapi.tago.go.kr/openapi/service/BusLcInfoInqireService/getRouteAcctoBusLcList?serviceKey=TGl%2FEQu3DnkXz1pe5Wyi3AveK9xofqEHe6zRAzkSH1DQ2eGsyOgiCp8qdH7tmpU3CXZzY2FqtsvM8ew9uN2WMA%3D%3D"
+        url = "http://openapi.tago.go.kr/openapi/service/BusLcInfoInqireService/getRouteAcctoBusLcList?serviceKey=PgdnR4cgw6WwmfyR7rqzzBcJPu3rx3LPtinOu4hHP5B9o2oiJ6alrNDnOvcqdBmUQKgQxFW1WGDnEMPFh%2B87Zw%3D%3D"
         url += "&cityCode="+ data['cityCode'] + "&routeId="+data['busRouteId'] + "&_type=json"
         req = requests.get(url=url)    
         temp = req.json()['response']['body']
-        print(temp)
         if temp['totalCount'] >0:
             body = req.json()['response']['body']['items']['item']
             for ord in body :
@@ -318,7 +308,6 @@ def QueueInfo(request): # 기사에게 데이터를 주는 API
                     print(ordered)
         else:
             return JsonResponse({'success': False, 'result': {}}, status=status.HTTP_404_NOT_FOUND)
-        print(ordered)
         maxNode = 0
         queueList = list()
         if data['busRouteId'] is not None:
@@ -327,23 +316,25 @@ def QueueInfo(request): # 기사에게 데이터를 주는 API
             if queueFilter is None : 
                 return JsonResponse({'success' : False, 'result':{}}, status=status.HTTP_204_NO_CONTENT)
             else:
-                if recentCheck :
-                    recentCheck = False
+                tempIndex = {'recentResult':{}}
+                queueFilter = QueueData.objects.filter(vehicleId = data['vehicleId']).order_by('-createAt')
+                if len(queueFilter) == 0 :
+                    print("queue없음")
+                else:
+                    stationFilter = busStationData.objects.filter(nodeId = queueFilter[0].stbusStopId)
+                    tempIndex['recentResult']['stationName'] = stationFilter[0].stationName
+                    tempIndex['recentResult']['queueTime'] = queueFilter[0].createAt
                 if data['busRouteId'] is not None:
                     route = routePerBus.objects.filter(busRouteId = data['busRouteId'])
                     for i in route:
                         if maxNode < i.nodeord:
                             maxNode = i.nodeord
-                    print(maxNode)
                 for i in range(0,4):
                     if maxNode < ordered + i:
                         print()
                     else:
-                        print(i)
                         filterRouteList = route.filter(nodeord=ordered+i)[0].nodeId
-                        print(filterRouteList)
                         stationsFilterList = busStationData.objects.filter(nodeId=filterRouteList)[0]
-                        print(stationsFilterList.stationName)
                         queueList.append({'stationName':stationsFilterList.stationName, 'waiting' : False})
                 for i in queueFilter:                        
                     queueOrder = i.stNodeOrder
@@ -351,17 +342,7 @@ def QueueInfo(request): # 기사에게 데이터를 주는 API
                         if i.boardingCheck == 1 :
                             flag = True
                         queueList[queueOrder-ordered]['waiting'] = True
-                if recentPostMan == recentMessageMan :
-                    print("중복처리")
-                else:
-                    if recentVehicleId == data['vehicleId']:
-                        recentData = busStationData.objects.filter(nodeId = recentNodeId)[0]
-                        recentQueue = QueueData.objects.filter(uid = recentPostMan)[0]
-                        tempIndex['recentResult']['stationName'] = recentData.stationName
-                        tempIndex['recentResult']['queueTime'] = recentQueue.createAt
-                        recentMessageMan = recentPostMan
-                        return JsonResponse({'success':True, 'result':queueList,'boardingStatus' : flag,'message':tempIndex}, status=status.HTTP_200_OK)
-                return JsonResponse({'success':True, 'result':queueList, 'boardingStatus' : flag, 'message':{}}, status=status.HTTP_200_OK)
+                return JsonResponse({'success':True, 'result':queueList, 'boardingStatus' : flag, 'message':tempIndex}, status=status.HTTP_200_OK)
         else:
             return JsonResponse({'success':False, 'result' : {}}, status = status.HTTP_400_BAD_REQUEST)
     else:
@@ -462,16 +443,6 @@ def searchKey(request): #사용자 어플에서 검색 API
 
                 return JsonResponse({'success':True, 'result':tempList}, status = status.HTTP_200_OK)
 
-#POST CHECKING
-
-def check_QueuePosting(nodeid, vehicleid, uid): #사용자가 Queue에 데이터를 등록할 때 flag를 날려주는 함수
-    global postFlag, recentNodeId, recentVehicleId, recentPostMan
-    postFlag = True
-    recentNodeId = nodeid
-    recentVehicleId = vehicleid
-    recentPostMan = uid
-    print("queue on data" + "nodeId = " + recentNodeId + "vehicleId = "+ recentVehicleId )
-
 #----------------------------------------------------------------------------------------------------------------------------------------------
     #json을 읽어서 routeData와 busStationData를 DB에 저장하는 함수
 def read_insert():
@@ -500,7 +471,7 @@ def api_insert():
     json_routeInfo = dict()
     with open("routeInfo.json","r") as rt_json:
         json_routeInfo = json.load(rt_json)
-    url = "http://openapi.tago.go.kr/openapi/service/BusRouteInfoInqireService/getRouteAcctoThrghSttnList?serviceKey=TGl%2FEQu3DnkXz1pe5Wyi3AveK9xofqEHe6zRAzkSH1DQ2eGsyOgiCp8qdH7tmpU3CXZzY2FqtsvM8ew9uN2WMA%3D%3D&_type=json"
+    url = "http://openapi.tago.go.kr/openapi/service/BusRouteInfoInqireService/getRouteAcctoThrghSttnList?serviceKey=PgdnR4cgw6WwmfyR7rqzzBcJPu3rx3LPtinOu4hHP5B9o2oiJ6alrNDnOvcqdBmUQKgQxFW1WGDnEMPFh%2B87Zw%3D%3D&_type=json"
     url += "&cityCode=38030&numOfRows=1000&routeId=JJB"
 
     for i in json_routeInfo:
