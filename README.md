@@ -1,9 +1,9 @@
 # BBas-Django-Backend
 ### ServerClient - Info
-- OS : Windows 10 Education N x64
-- CPU : Intel(R) Core(TM) i7-9700F CPU @ 3.00GHz   3.00 GHz
-- RAM : 16.0GB
-- MEMORY : SSD 732GB, HDD 2TB
+- OS : Ubuntu 20.04
+- CPU : Intel(R) Core(TM) i5-4690 3.0 GHz
+- RAM : 8.0GB
+- MEMORY : SSD 120GB
 
 ### Structure
 
@@ -12,6 +12,9 @@
 ### DB-Schema
 
 ![Blank diagram (2)](https://user-images.githubusercontent.com/71334624/137425764-936b82a1-0146-4ae6-a65b-61947066ba74.png)
+### E-R diagram
+
+![BBAS_erd](https://user-images.githubusercontent.com/71334624/137486683-b52f1e64-9085-483c-ad8a-168140e12aa2.png)
 
 
 DB-Schema
